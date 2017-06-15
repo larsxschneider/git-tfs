@@ -94,6 +94,9 @@ namespace Sep.Git.Tfs.Util
                 if (change.Change.Item.ItemType != TfsItemType.File)
                     continue;
 
+                if (!_resolver.ShouldIncludeGitItem(change.GitPath))
+                    continue;
+
                 if (change.Change.ChangeType.IncludesOneOf(TfsChangeType.Delete))
                 {
                     if (change.GitPath != null)
