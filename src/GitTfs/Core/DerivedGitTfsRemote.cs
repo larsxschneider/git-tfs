@@ -225,11 +225,6 @@ namespace GitTfs.Core
             throw DerivedRemoteException;
         }
 
-        public void QuickFetch()
-        {
-            throw DerivedRemoteException;
-        }
-
         public void QuickFetch(int changesetId)
         {
             throw DerivedRemoteException;

@@ -33,6 +33,7 @@ namespace GitTfs.Commands
         private bool FetchAll { get; set; }
         private bool FetchLabels { get; set; }
         private bool FetchParents { get; set; }
+        private bool IgnoreRestricted { get; set; }
         private string BareBranch { get; set; }
         private bool ForceFetch { get; set; }
         private bool ExportMetadatas { get; set; }
@@ -100,7 +101,9 @@ namespace GitTfs.Commands
                     { "c|changeset|from=", "The changeset to clone from (must be a number)",
                         v => InitialChangeset = Convert.ToInt32(v) },
                     { "t|up-to|to=", "up-to changeset # (optional, -1 for up to maximum, must be a number, not prefixed with 'C')",
-                        v => UpToChangeSetOption = v }
+                        v => UpToChangeSetOption = v },
+                    { "ignore-restricted", "Ignore restricted changeset.",
+                        v => IgnoreRestricted = v != null }
                 }.Merge(_remoteOptions.OptionSet);
             }
         }
@@ -189,12 +192,12 @@ namespace GitTfs.Commands
                 {
                     _properties.InitialChangeset = InitialChangeset.Value;
                     _properties.PersistAllOverrides();
-                    remote.QuickFetch(InitialChangeset.Value);
-                    remote.Fetch(stopOnFailMergeCommit, upToChangeSet);
+                    remote.QuickFetch(InitialChangeset.Value, IgnoreRestricted);
+                    remote.Fetch(stopOnFailMergeCommit, upToChangeSet, IgnoreRestricted);
                 }
                 else
                 {
-                    remote.Fetch(stopOnFailMergeCommit, upToChangeSet);
+                    remote.Fetch(stopOnFailMergeCommit, upToChangeSet, IgnoreRestricted);
                 }
             }
             finally
